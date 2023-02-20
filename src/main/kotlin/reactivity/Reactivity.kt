@@ -9,7 +9,7 @@ private typealias Getter<T> = () -> T
  * the current locking mechanism only allows one effect to be running at a time
  */
 private val lock = ReentrantLock()
-private var atomicEffect: Effect? = null
+private var activeEffect: Effect? = null
 
 /**
  * represents a delegate getter
@@ -85,9 +85,9 @@ fun watchEffect(update: Effect) {
     effect = {
         lock.lock()
         try {
-            atomicEffect = effect
+            activeEffect = effect
             update()
-            atomicEffect = null
+            activeEffect = null
         } finally {
             lock.unlock()
         }
@@ -101,7 +101,7 @@ fun watch(update: Effect) {
 }
 
 private fun <T> track(target: Ref<T>) {
-    atomicEffect?.let { target.subscribers.add(it) }
+    activeEffect?.let { target.subscribers.add(it) }
 }
 
 private fun <T> trigger(target: Ref<T>) {
