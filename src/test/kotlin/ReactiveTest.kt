@@ -3,15 +3,18 @@ import reactivity.ref
 import reactivity.watchEffect
 
 fun main() {
-    val a = ref(2)
-    val b = ref(3)
-    val c = computed { a.value + b.value }
+    var a by ref(0)
+    val b by computed { a + 1 }
+    val c by computed { b + 1 }
 
     watchEffect {
-        println("c: ${c.value}")
+        println("b: $b")
     }
 
-    a.value = 10
-    b.value = 1000
-    b.value = -10
+    watchEffect {
+        println("c: $c")
+    }
+
+    a += 1
+    a += 1
 }

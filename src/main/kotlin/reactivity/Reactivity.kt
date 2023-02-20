@@ -1,13 +1,68 @@
 package reactivity
 
-import java.util.*
-import java.util.concurrent.atomic.AtomicReference
+import java.util.concurrent.locks.ReentrantLock
 
-typealias Effect = () -> Unit
-typealias Getter<T> = () -> T
-typealias Setter<T> = (T) -> Unit
+private typealias Effect = () -> Unit
+private typealias Getter<T> = () -> T
 
-private val atomicEffect = AtomicReference<Effect?>(null)
+/**
+ * the current locking mechanism only allows one effect to be running at a time
+ */
+private val lock = ReentrantLock()
+private var atomicEffect: Effect? = null
+
+/**
+ * represents a delegate getter
+ */
+private interface Gettable<T> {
+    operator fun getValue(thisRef: Nothing?, property: Any?): T
+}
+
+/**
+ * represents a delegate setter
+ */
+private interface Settable<T> {
+    operator fun setValue(thisRef: Nothing?, property: Any?, value: T)
+}
+
+/**
+ * the most primitive reactive object is a ref, it holds a single value that can only be read.
+ * a ref is a dependency that can be subscribed to. The ref will notify all subscribers when it changes.
+ */
+abstract class Ref<T>: Gettable<T> { val subscribers = HashSet<Effect>() }
+
+/**
+ * a mutable ref is a ref that can be read and written to
+ * @param initial the initial value of the ref
+ * @see Ref
+ */
+class MutableRef<T>(initial: T): Ref<T>(), Settable<T> {
+    private var _value = initial
+    override operator fun setValue(thisRef: Nothing?, property: Any?, value: T) {
+        _value = value
+        trigger(this)
+    }
+
+    override operator fun getValue(thisRef: Nothing?, property: Any?): T {
+        track(this)
+        return _value
+    }
+}
+
+/**
+ * a computed reactive object is a ref that is computed by a Getter
+ * @param getter the getter to compute on
+ * @see Getter
+ * TODO: add caching of computed values
+ */
+class Computed<T>(
+    private val getter: Getter<T>
+) : Ref<T>() {
+    override operator fun getValue(thisRef: Nothing?, property: Any?): T {
+        track(this)
+        return getter()
+    }
+}
 
 /**
  * Creates a computed reactive object
@@ -19,7 +74,7 @@ fun <T> computed(getter: Getter<T>) = Computed(getter)
  * Creates a ref reactive object
  * @param initial the initial value of the ref
  */
-fun <T> ref(initial: T) = RefImpl(initial)
+fun <T> ref(initial: T) = MutableRef(initial)
 
 /**
  * Watches dependencies and runs the effect when they change.
@@ -28,82 +83,29 @@ fun <T> ref(initial: T) = RefImpl(initial)
 fun watchEffect(update: Effect) {
     lateinit var effect: Effect
     effect = {
-        atomicEffect.set(effect)
-        update()
-        atomicEffect.set(null)
+        lock.lock()
+        try {
+            atomicEffect = effect
+            update()
+            atomicEffect = null
+        } finally {
+            lock.unlock()
+        }
     }
 
     effect()
 }
 
-/**
- * A ref is the most primitive reactive object. it tracks a single value.
- */
-abstract class Ref<T> {
-    val subscribers = HashSet<Effect>()
-    abstract var value: T
-    abstract operator fun invoke(): T
-    abstract operator fun invoke(value: T)
-}
-
-/**
- * A computed is a reactive object that is derived from its dependencies.
- * TODO: Cache computed values until deps change
- */
-class Computed<T>(private val getter: Getter<T>): Ref<T>() {
-    override var value: T
-        get() {
-            track(this)
-            return getter()
-        }
-        set(_) {
-            throw UnsupportedOperationException("Cannot set value of computed")
-        }
-
-    override operator fun invoke() = value
-    override fun invoke(value: T) {
-        throw UnsupportedOperationException("Cannot set value of computed")
-    }
-}
-
-/**
- * A ref is a reactive object that can be used to track a single value.
- */
-class RefImpl<T>(initial: T): Ref<T>() {
-    private val _value = AtomicReference(initial)
-    override var value: T
-        get() {
-            track(this)
-            return _value.get()
-        }
-        set(value) {
-            _value.set(value)
-            trigger(this)
-        }
-
-    override fun invoke(): T { return value }
-
-    override operator fun invoke(value: T) {
-        this.value = value
-    }
+fun watch(update: Effect) {
+    TODO("not implemented")
 }
 
 private fun <T> track(target: Ref<T>) {
-    try {
-        if (atomicEffect.get() != null) {
-            target.subscribers.add(atomicEffect.get()!!)
-        }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+    atomicEffect?.let { target.subscribers.add(it) }
 }
 
 private fun <T> trigger(target: Ref<T>) {
     /* TODO: de-duplicate effects */
-    try {
-        target.subscribers.forEach { it() }
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+    target.subscribers.forEach { it() }
 }
 
