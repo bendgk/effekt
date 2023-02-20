@@ -1,8 +1,4 @@
-<div align="center">
-  <picture>
-    <img alt="EffeKt logo" src="https://raw.githubusercontent.com/bendgk/effekt/main/res/logo.png">
-  </picture>
-</div>
+<img alt="EffeKt logo" src="https://raw.githubusercontent.com/bendgk/effekt/main/res/logo.png">
 
 [![Kotlin](https://img.shields.io/badge/kotlin-1.7.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 
