@@ -1,6 +1,6 @@
 <div align="center">
   <picture>
-    <img alt="EffeKt logo" src="https://raw.githubusercontent.com/bendgk/effekt/main/res/logo1.5x.png">
+    <img alt="EffeKt logo" src="https://raw.githubusercontent.com/bendgk/effekt/main/res/logo.png">
   </picture>
 </div>
 
