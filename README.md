@@ -1,3 +1,11 @@
+<div align="center">
+  <picture>
+    <img alt="effekt logo" src="https://raw.githubusercontent.com/bendgk/effekt/main/res/logo.png">
+  </picture>
+</div>
+
+[![Kotlin](https://img.shields.io/badge/kotlin-1.7.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
+
 # effekt
 Kotlin Reactive Framework inspired by [Vue.js](https://vuejs.org/guide/extras/reactivity-in-depth.html)
 
