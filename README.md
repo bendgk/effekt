@@ -1,12 +1,12 @@
 <div align="center">
   <picture>
-    <img alt="effekt logo" src="https://raw.githubusercontent.com/bendgk/effekt/main/res/logo2x.png">
+    <img alt="EffeKt logo" src="https://raw.githubusercontent.com/bendgk/effekt/main/res/logo2x.png">
   </picture>
 </div>
 
 [![Kotlin](https://img.shields.io/badge/kotlin-1.7.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 
-# effekt
+# EffeKt
 Kotlin reactive library inspired by [Vue.js](https://vuejs.org/guide/extras/reactivity-in-depth.html). It seeks to provide reactive primitives to kotlin for building functionally coupled systems.
 
 # Usage
