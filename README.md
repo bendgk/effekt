@@ -7,7 +7,7 @@
 [![Kotlin](https://img.shields.io/badge/kotlin-1.7.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 
 # effekt
-Kotlin Reactive Framework inspired by [Vue.js](https://vuejs.org/guide/extras/reactivity-in-depth.html)
+Kotlin reactive library inspired by [Vue.js](https://vuejs.org/guide/extras/reactivity-in-depth.html)
 
 # Usage
 effekt brings the following reactive primitives from vue to kotlin:
