@@ -10,7 +10,7 @@
 Kotlin reactive library inspired by [Vue.js](https://vuejs.org/guide/extras/reactivity-in-depth.html). It seeks to provide reactive primitives to kotlin for building functionally coupled systems.
 
 # Usage
-effekt brings the following reactive primitives from vue to kotlin:
+EffeKt brings the following reactive primitives from vue to kotlin:
 * [ref](https://vuejs.org/api/reactivity-core.html#ref)
 * [computed](https://vuejs.org/api/reactivity-core.html#computed)
 * [watchEffect](https://vuejs.org/api/reactivity-core.html#watcheffect)
