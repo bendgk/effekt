@@ -20,7 +20,7 @@ private var atomicEffect: ScopedEffect? = null
  */
 abstract class ScopedRef<T>(
     protected val scope: CoroutineScope,
-): Gettable<T>, CoroutineScope by scope {
+): Gettable<T> {
     private val subscribers = HashSet<ScopedEffect>()
 
     protected fun <T> track() {

@@ -5,8 +5,8 @@ plugins {
     kotlin("jvm") version "1.7.20"
 }
 
-group = "gg.bed"
-version = "1.0-SNAPSHOT"
+group = "dev.gambit"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
