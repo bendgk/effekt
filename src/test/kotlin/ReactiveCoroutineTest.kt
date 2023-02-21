@@ -1,10 +1,9 @@
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import reactivity.computed
-import reactivity.ref
-import reactivity.watchEffect
+import concurrency.computed
+import concurrency.ref
+import concurrency.watchEffect
 import kotlin.time.Duration.Companion.seconds
 
 fun main() {
