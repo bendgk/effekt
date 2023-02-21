@@ -13,26 +13,36 @@ EffeKt brings the following reactive primitives from vue to kotlin:
 * [computed](https://vuejs.org/api/reactivity-core.html#computed)
 * [watchEffect](https://vuejs.org/api/reactivity-core.html#watcheffect)
 
+### ref
+A ref is a reactive primitive that can be read and written to.  Ref's store a single value and a list of subscribers.  When a ref is used as a dependency of another primitive (such as `computed` or `watchEffect`), that primitive is added as a subscriber to that ref.
+when a ref is updated we need to update all the subscribers too.
+
+### computed
+A computed is a reactive primitive that can only be read. Whenever a computed value is read its value is recomputed according to its dependencies.
+
+### watchEffect
+watchEffect is a reactive helper function that can watch dependencies for changes.  It runs the given side effect when a dependency change occurs.
+
 # Example
 ```kotlin
-val a = ref(2)
-val b = ref(3)
-val c = computed { a.value + b.value }
+var price by ref(2.00)
+var quantity by ref(1000)
+val revenue by computed { price * quantity }
 
 watchEffect {
-    println("c: ${c.value}")
+    println("revenue: $revenue")
 }
 
-a.value = 10
-b.value = 1000
-b.value = -10
+price /= 2
+price *= 10
+quantity += 500
 ```
 
 Output:
 ```bash
-> c: 5
-> c: 13
-> c: 1010
-> c: 0
+> revenue: 2000.0
+> revenue: 1000.0
+> revenue: 10000.0
+> revenue: 15000.0
 ```
 
