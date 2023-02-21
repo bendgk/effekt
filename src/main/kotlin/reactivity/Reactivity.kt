@@ -14,14 +14,14 @@ private var atomicEffect: Effect? = null
 /**
  * represents a delegate getter
  */
-private interface Gettable<T> {
+internal interface Gettable<T> {
     operator fun getValue(thisRef: Nothing?, property: Any?): T
 }
 
 /**
  * represents a delegate setter
  */
-private interface Settable<T> {
+internal interface Settable<T> {
     operator fun setValue(thisRef: Nothing?, property: Any?, value: T)
 }
 
@@ -29,7 +29,18 @@ private interface Settable<T> {
  * the most primitive reactive object is a ref, it holds a single value that can only be read.
  * a ref is a dependency that can be subscribed to. The ref will notify all subscribers when it changes.
  */
-abstract class Ref<T>: Gettable<T> { val subscribers = HashSet<Effect>() }
+abstract class Ref<T>: Gettable<T> {
+    private val subscribers = HashSet<Effect>()
+
+    protected fun <T> track() {
+        atomicEffect?.let { subscribers.add(it) }
+    }
+
+    protected fun <T> trigger() {
+        /* TODO: de-duplicate effects */
+        subscribers.forEach { it() }
+    }
+}
 
 /**
  * a mutable ref is a ref that can be read and written to
@@ -40,11 +51,11 @@ class MutableRef<T>(initial: T): Ref<T>(), Settable<T> {
     private var _value = initial
     override operator fun setValue(thisRef: Nothing?, property: Any?, value: T) {
         _value = value
-        trigger(this)
+        trigger<T>()
     }
 
     override operator fun getValue(thisRef: Nothing?, property: Any?): T {
-        track(this)
+        track<T>()
         return _value
     }
 }
@@ -59,7 +70,7 @@ class Computed<T>(
     private val getter: Getter<T>
 ) : Ref<T>() {
     override operator fun getValue(thisRef: Nothing?, property: Any?): T {
-        track(this)
+        track<T>()
         return getter()
     }
 }
@@ -98,14 +109,5 @@ fun watchEffect(update: Effect) {
 
 fun watch(update: Effect) {
     TODO("not implemented")
-}
-
-private fun <T> track(target: Ref<T>) {
-    atomicEffect?.let { target.subscribers.add(it) }
-}
-
-private fun <T> trigger(target: Ref<T>) {
-    /* TODO: de-duplicate effects */
-    target.subscribers.forEach { it() }
 }
 
