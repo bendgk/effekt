@@ -7,6 +7,19 @@
 # EffeKt
 Kotlin reactive library inspired by [Vue.js](https://vuejs.org/guide/extras/reactivity-in-depth.html). It seeks to provide reactive primitives to kotlin for building functionally coupled systems.
 
+# Quick Start
+In your `build.gradle.kts` file:
+```kotlin
+repositories {
+    //...
+    maven { url = URI("https://jitpack.io") }
+}
+
+dependencies {
+    implementation("com.github.bendgk:effekt:1.0.0")
+}
+```
+
 # Usage
 EffeKt brings the following reactive primitives from vue to kotlin:
 * [ref](https://vuejs.org/api/reactivity-core.html#ref)
