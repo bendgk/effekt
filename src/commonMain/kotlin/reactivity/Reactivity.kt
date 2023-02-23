@@ -1,6 +1,6 @@
 package reactivity
 
-import java.util.concurrent.locks.ReentrantLock
+import kotlinx.atomicfu.locks.reentrantLock
 
 private typealias Effect = () -> Unit
 private typealias Getter<T> = () -> T
@@ -8,7 +8,7 @@ private typealias Getter<T> = () -> T
 /**
  * the current locking mechanism only allows one effect to be running at a time
  */
-private val lock = ReentrantLock()
+private val lock = reentrantLock()
 private var atomicEffect: Effect? = null
 
 /**
@@ -105,9 +105,5 @@ fun watchEffect(update: Effect) {
     }
 
     effect()
-}
-
-fun watch(update: Effect) {
-    TODO("not implemented")
 }
 

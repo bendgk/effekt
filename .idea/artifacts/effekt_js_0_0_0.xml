@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="effekt-js-0.0.0">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <root id="archive" name="effekt-js-0.0.0.jar">
+      <element id="module-output" name="effekt.jsMain" />
+    </root>
+  </artifact>
+</component>
