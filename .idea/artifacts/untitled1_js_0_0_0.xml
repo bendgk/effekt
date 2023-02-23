@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="untitled1-js-0.0.0">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <root id="archive" name="untitled1-js-0.0.0.jar">
+      <element id="module-output" name="untitled1.jsMain" />
+    </root>
+  </artifact>
+</component>
